@@ -1,1 +1,11 @@
 2017-08-19 15:32
+
+how to run?
+
+1. init a new game, G
+
+2. store each actual step or each step planned ahead as different states in G
+
+3. After each move do pruning.
+
+4. Data base & Machine learning.
