@@ -3,9 +3,17 @@
 how to run?
 
 1. init a new game, G
+We need to know the board size, who play first and the colour to each player. e.g. board size 11 (11 by 11, the length always equals to the width), human play first, human white.
+
 
 2. store each actual step or each step planned ahead as different states in G
 
 3. After each move do pruning.
 
-4. Data base & Machine learning.
+4. Display on a window
+
+5. Data base & Machine learning.
+
+implementation
+state
+self.curr_map is a dictionary. The index is a tuple, (x, y). The value to each index is either 0 or 1. Note that 0 always represents the computer
