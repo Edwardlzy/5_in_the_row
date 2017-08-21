@@ -64,9 +64,10 @@ class Window(Frame):
 
 		# Labels can be texts or images.
 		img = Label(self, image=render, width=window_w, height=window_h)
-		img.pack(fill=BOTH, expand=1)
+		img.pack(fill="none", expand=True)
 		img.image = render
-		img.place(x=0, y=0)
+
+		# img.place(x=0, y=0)
 
 	def show_text(self):
 		text = Label(self, text="Hello world!")
