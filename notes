@@ -20,3 +20,6 @@ self.curr_map is a dictionary. The index is a tuple, (x, y). The value to each i
 
 state.py:
 	discard()?
+
+canvas.py contains some example code to draw the board and chess. May need to fix the size of the checkboard.
+Further communication with backend needed.
