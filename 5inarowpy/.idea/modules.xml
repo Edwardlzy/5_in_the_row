@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/5_in_the_row.iml" filepath="$PROJECT_DIR$/.idea/5_in_the_row.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/5inarowpy.iml" filepath="$PROJECT_DIR$/.idea/5inarowpy.iml" />
     </modules>
   </component>
 </project>
