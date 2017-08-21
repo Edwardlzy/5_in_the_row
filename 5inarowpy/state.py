@@ -16,8 +16,10 @@ class State:
         for i in range(-2, 3, 1):
             for j in range(-2, 3, 1):
                 new_possible = (x + i, y + j)
+                # Add new valid possible moves to self.poss_locs
                 if new_possible not in self.curr_map and new_possible not in self.poss_locs:
-                    if new_possible[0] >= 0 and new_possible[0] < self.map_size and new_possible[1] >= 0 and new_possible[1] < self.map_size:
+                    if new_possible[0] >= 0 and new_possible[0] < self.map_size and 
+                       new_possible[1] >= 0 and new_possible[1] < self.map_size:
                         self.poss_locs.add(new_possible)
         for i in range(-3, 4, 3):
             for j in range(-3, 4, 3):
