@@ -2,13 +2,13 @@ from tkinter import *
 from state import *
 
 class Window(Frame):
-	# def __init__(self, master=None, turn=1, size=15):
-	def __init__(self, master=None, size=15):
+	def __init__(self, master=None, turn=1, size=15):
+	# def __init__(self, master=None, size=15):
 		Frame.__init__(self, master)
 		self.master = master
 		self.canvas = Canvas(self.master, width=720, height=720, bg="#FFA23D")
 		self.canvas.pack()
-		# self.turn = turn
+		self.turn = turn
 		self.steps = []
 		self.size = size
 		self.sep_len = (720 - 30 - 30) / (self.size - 1)
@@ -38,10 +38,17 @@ class Window(Frame):
 
 		x = 30 + x_index * self.sep_len
 		y = 30 + y_index * self.sep_len
+		# print("position: (", x, ", ", y, ")")
 		self.draw_chess(x, y)
+		self.curr_state.new_step((x_index, y_index), 1)
+		self.his.append(self.curr_state.copy())
+		loc = self.curr_state.eva_fn()
+		x, y = 30 + loc[0] * self.sep_len, 30 + loc[1] * self.sep_len
+		self.draw_chess(x, y)
+		self.curr_state.new_step(loc, 0)
+		self.his.append(self.curr_state.copy())
 		self.bitmap[(x, y)] = 1
 		# print("position:", x_index, y_index)
-	
 		return x_index, y_index
 
 
@@ -97,19 +104,20 @@ class Window(Frame):
 			return
 		# Update records for reverse use.
 
-		# if (self.turn == 0):
-		# 	self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="black")))
-		# else:
-		# 	self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="white")))
-		# self.turn = 1 - self.turn
+		if (self.turn == 0):
+			self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="white")))
+		else:
+			self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="black")))
+		self.turn = 1 - self.turn
 
-		self.steps.append(((x, y), self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="black")))
-		self.curr_state.new_step((x, y), 1)
-		self.his.append(self.curr_state.copy())
-		loc = self.curr_state.eva_fn()
-		self.steps.append((loc, self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="white")))
-		self.curr_state.new_step(loc, 0)
-		self.his.append(self.curr_state.copy())
+		# print("position: (", x, ", ", y, ")")
+		# self.steps.append(((x, y), self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="black")))
+		# self.curr_state.new_step((x, y), 1)
+		# self.his.append(self.curr_state.copy())
+		# loc = self.curr_state.eva_fn()
+		# self.steps.append((loc, self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="white")))
+		# self.curr_state.new_step(loc, 0)
+		# self.his.append(self.curr_state.copy())
 
 
 
