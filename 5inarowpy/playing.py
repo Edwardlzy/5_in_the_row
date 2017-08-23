@@ -1,7 +1,7 @@
 
 
 from state import *
-from ai import *
+# from ai import *
 
 computer = 0
 human = 1
@@ -51,6 +51,7 @@ class play:
             self.usual_play(place, human)
             next = computer
         else:
-            move = ai.next_move(self.curr_state)
+            move = self.curr_state.eva_fn()
+            self.usual_play(move, computer)
             next = human
         self.gaming(next)
