@@ -1,17 +1,22 @@
 from tkinter import *
+from state import *
 
 class Window(Frame):
-	def __init__(self, master=None, turn=0, size=15):
+	# def __init__(self, master=None, turn=1, size=15):
+	def __init__(self, master=None, size=15):
 		Frame.__init__(self, master)
 		self.master = master
 		self.canvas = Canvas(self.master, width=720, height=720, bg="#FFA23D")
 		self.canvas.pack()
-		self.turn = turn
+		# self.turn = turn
 		self.steps = []
 		self.size = size
 		self.sep_len = (720 - 30 - 30) / (self.size - 1)
 		self.bitmap = {}
 		self.custom_init()
+		self.curr_state = State(15, {}, set())
+		self.step = 0
+		self.his = []
 
 
 	# A helper to analyze the clicking location. Return the index on 
@@ -91,11 +96,21 @@ class Window(Frame):
 		if ((x, y) in self.bitmap and self.bitmap[(x, y)] == 1):
 			return
 		# Update records for reverse use.
-		if (self.turn == 0):
-			self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="black")))
-		else:
-			self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="white")))
-		self.turn = 1 - self.turn
+
+		# if (self.turn == 0):
+		# 	self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="black")))
+		# else:
+		# 	self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="white")))
+		# self.turn = 1 - self.turn
+
+		self.steps.append(((x, y), self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="black")))
+		self.curr_state.new_step((x, y), 1)
+		self.his.append(self.curr_state.copy())
+		loc = self.curr_state.eva_fn()
+		self.steps.append((loc, self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="white")))
+		self.curr_state.new_step(loc, 0)
+		self.his.append(self.curr_state.copy())
+
 
 
 	# A method to reverse one step back.
@@ -104,9 +119,18 @@ class Window(Frame):
 			step = self.steps.pop(-1)
 			self.canvas.delete(step[1])
 			self.bitmap[step[0]] = 0
+			self.his.pop(-1)
 		except:
 			return
-		self.turn = 1 - self.turn
+		try:
+			step = self.steps.pop(-1)
+			self.canvas.delete(step[1])
+			self.bitmap[step[0]] = 0
+			self.his.pop(-1)
+			self.curr_state = self.his[-1].copy()
+		except:
+			return
+		# self.turn = 1 - self.turn
 
 
 	# Restart the game.
@@ -119,4 +143,3 @@ root = Tk()
 root.geometry("720x720")
 app = Window(root)
 root.mainloop()
-
