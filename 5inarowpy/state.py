@@ -247,9 +247,10 @@ class State:
     def eva_fn(self):
         def check_all_directions(loc, state):
             e = 0
-            for x in (-1, 2):
-                for y in (-1, 2):
+            for x in range(-1, 2):
+                for y in range(-1, 2):
                     if x != 0 or y != 0:
+                        # print("before check_each, loc is", loc, ", x, y are ", x, y)
                         a = check_each(loc, x, y, state)
                         if a > 40000:
                             return a
@@ -270,6 +271,9 @@ class State:
                         tempS += "-"
                     else:
                         tempS += str(state.curr_map[new_loc])
+                else:
+                    tempS += "x"
+            print("loc", loc, ",tempS ", tempS)
             if "00000" in tempS:
                 return 999999
             if "011110" in tempS:
@@ -311,7 +315,7 @@ class State:
             state_copy = self.copy()
             state_copy.new_step(loc, 0)
             t = check_all_directions(loc, state_copy)
-            print("loc is ", loc,", t is ", t)
+            # print("loc is ", loc,", t is ", t)
             if t >= 999999:
                 return loc
             if m < t:
@@ -319,6 +323,7 @@ class State:
                 l = [loc]
             elif m == t:
                 l.append(loc)
+            # print(l, t)
         return choice(l)
 
     def __str__(self):

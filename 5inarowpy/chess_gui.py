@@ -146,7 +146,7 @@ class Window(Frame):
 	def restart(self):
 		for item in self.bitmap:
 			self.reverse()
-		self.his = {}
+		self.his = []
 		self.curr_state = State(15, {}, set())
 
 
@@ -155,5 +155,4 @@ root.geometry("720x720")
 app = Window(root)
 print(app.steps)
 print(app.his)
-print(app.curr_state)
 root.mainloop()
