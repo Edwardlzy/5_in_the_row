@@ -39,17 +39,18 @@ class Window(Frame):
 		x = 30 + x_index * self.sep_len
 		y = 30 + y_index * self.sep_len
 		# print("position: (", x, ", ", y, ")")
-		self.draw_chess(x, y)
-		self.curr_state.new_step((x_index, y_index), 1)
-		self.his.append(self.curr_state.copy())
-		loc = self.curr_state.eva_fn()
-		x, y = 30 + loc[0] * self.sep_len, 30 + loc[1] * self.sep_len
-		self.draw_chess(x, y)
-		self.curr_state.new_step(loc, 0)
-		self.his.append(self.curr_state.copy())
-		self.bitmap[(x, y)] = 1
+		if self.draw_chess(x, y):
+			self.bitmap[(x, y)] = 1
+			self.curr_state.new_step((x_index, y_index), 1)
+			self.his.append(self.curr_state.copy())
+			loc = self.curr_state.eva_fn()
+			x, y = 30 + loc[0] * self.sep_len, 30 + loc[1] * self.sep_len
+			self.draw_chess(x, y)
+			self.curr_state.new_step(loc, 0)
+			self.his.append(self.curr_state.copy())
+			self.bitmap[(x, y)] = 1
 		# print("position:", x_index, y_index)
-		return x_index, y_index
+			return x_index, y_index
 
 
 	# Build the window and necessary settings.
@@ -101,7 +102,7 @@ class Window(Frame):
 	# Display the latest chess choice.
 	def draw_chess(self, x, y):
 		if ((x, y) in self.bitmap and self.bitmap[(x, y)] == 1):
-			return
+			return 0
 		# Update records for reverse use.
 
 		if (self.turn == 0):
@@ -109,7 +110,7 @@ class Window(Frame):
 		else:
 			self.steps.append(((x, y), self.canvas.create_oval(x-17, y-17, x+17, y+17, fill="black")))
 		self.turn = 1 - self.turn
-
+		return 1
 		# print("position: (", x, ", ", y, ")")
 		# self.steps.append(((x, y), self.canvas.create_oval(x - 17, y - 17, x + 17, y + 17, fill="black")))
 		# self.curr_state.new_step((x, y), 1)
@@ -145,9 +146,14 @@ class Window(Frame):
 	def restart(self):
 		for item in self.bitmap:
 			self.reverse()
+		self.his = {}
+		self.curr_state = State(15, {}, set())
 
 
 root = Tk()
 root.geometry("720x720")
 app = Window(root)
+print(app.steps)
+print(app.his)
+print(app.curr_state)
 root.mainloop()
