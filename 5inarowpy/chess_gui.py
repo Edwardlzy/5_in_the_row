@@ -26,7 +26,7 @@ class Window(Frame):
 		x = event.x
 		y = event.y
 
-		if (x < 0 or y < 0 or x >=720 or y >= 720):
+		if (x < 0 or y < 0 or x >=710 or y >= 710):
 			# print("Invalid position!")
 			return
 
@@ -68,7 +68,7 @@ class Window(Frame):
 		play.add_command(label="reverse one step", command=self.reverse)
 		menu_bar.add_cascade(label="play", menu=play)
 		self.draw_board()
-		self.master.bind("<Button 1>", self.get_clicking_loc)
+		self.canvas.bind("<Button 1>", self.get_clicking_loc)
 
 
 	# Draw the play board.
