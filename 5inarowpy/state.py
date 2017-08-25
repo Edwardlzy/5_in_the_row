@@ -30,13 +30,13 @@ class State:
                     if new_possible[0] >= 0 and new_possible[0] < self.map_size and new_possible[1] >= 0 and \
                                     new_possible[1] < self.map_size:
                         self.poss_locs.add(new_possible)
-        for i in range(-3, 4, 3):
-            for j in range(-3, 4, 3):
-                new_possible = (x + i, y + j)
-                if new_possible not in self.curr_map and new_possible not in self.poss_locs:
-                    if new_possible[0] >= 0 and new_possible[0] < self.map_size and new_possible[1] >= 0 and \
-                                    new_possible[1] < self.map_size:
-                        self.poss_locs.add(new_possible)
+        # for i in range(-3, 4, 3):
+        #     for j in range(-3, 4, 3):
+        #         new_possible = (x + i, y + j)
+        #         if new_possible not in self.curr_map and new_possible not in self.poss_locs:
+        #             if new_possible[0] >= 0 and new_possible[0] < self.map_size and new_possible[1] >= 0 and \
+        #                             new_possible[1] < self.map_size:
+        #                 self.poss_locs.add(new_possible)
 
     def isWin(self, loc, who):
         def one_direction(loc, x, y, who):
@@ -110,6 +110,7 @@ class State:
             for y in range(-1, 2):
                 if x != 0 or y != 0:
                     a = self.check_each(loc, x, y, state)
+                    print("(x, y) is", (x, 0), "eva result,", a)
                     if a > 40000:
                         return a
                     e += a
@@ -131,7 +132,7 @@ class State:
                 l.append(loc)
         return choice(l)
 
-    def mnimaxFn(self, depth):
+    def minimaxFn(self, depth):
         def mmfn(s, loc, who, depth):
             s_copy = s.copy()
             s_copy.new_step(loc, who)
@@ -148,7 +149,7 @@ class State:
                 if who == 0: # computer
                     c = max(c, mmfn(s_copy, move, 1, d))
                 else: #human
-                    c = min(c, mmfn(s_copy, move, 1, d))
+                    c = min(c, mmfn(s_copy, move, 0, d))
             return c
 
         c = 0

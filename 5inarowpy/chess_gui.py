@@ -45,7 +45,7 @@ class Window(Frame):
 			self.curr_state.new_step((x_index, y_index), 1)
 			self.his.append(self.curr_state.copy())
 			# loc = self.curr_state.eva_fn()
-			loc = self.curr_state.mnimaxFn(self.depth)
+			loc = self.curr_state.minimaxFn(self.depth)
 			print(loc)
 			x, y = 30 + loc[0] * self.sep_len, 30 + loc[1] * self.sep_len
 			self.draw_chess(x, y)
