@@ -72,7 +72,7 @@ class State:
                     tempS += str(state.curr_map[new_loc])
             else:
                 tempS += "x"
-        # print("loc", loc, ",tempS ", tempS)
+        print("loc", loc, ",tempS ", tempS)
         if "00000" in tempS:
             return 999999
         if "011110" in tempS or "11101" in tempS or "11011" in tempS:
@@ -142,7 +142,7 @@ class State:
                 else:
                     return -999999
             if d == 0:
-                return s_copy.check_all_directions(loc, self)
+                return s_copy.check_all_directions(loc, s_copy)
             c = 0
             for move in s_copy.poss_locs:
                 if who == 0: # computer
@@ -154,8 +154,8 @@ class State:
         c = 0
         l = []
         for m in self.poss_locs:
-            eva = mmfn(self, m, 1, depth)
-            print("move,", m, ". eva,", eva)
+            eva = mmfn(self, m, 0, depth)
+            # print("move,", m, ". eva,", eva)
             if c < eva:
                 c = eva
                 l = [m]
