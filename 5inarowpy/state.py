@@ -60,262 +60,68 @@ class State:
                 return True
         return False
 
-    # def eva_fn(self):
-    #     def check_all_directions(loc):
-    #         e = -1
-    #         for i in range(4):
-    #             x, y = [1, 1, 0, -1][i], [1, 0, 1, 1][i]
-    #             e = max(e, check_each(loc, x, y))
-    #         return e
-    #
-    #     def generateloc(loc, x, y, i):
-    #         p, q = loc[0], loc[1]
-    #         return (p + i * x, q + i * y)
-    #
-    #     def check_each(loc, x, y):
-    #         r = 0
-    #         new_loc = generateloc(loc, x, y, 1)
-    #         if new_loc not in self.curr_map: # O_
-    #             return 0
-    #         elif self.curr_map[new_loc] == human: # Ox
-    #             new_loc = generateloc(loc, x, y, 2)
-    #             if new_loc in self.curr_map and self.curr_map[new_loc] == human:  # Oxx
-    #                 new_loc = generateloc(loc, x, y, 3)
-    #                 if new_loc in self.curr_map and self.curr_map[new_loc] == human: # Oxxx
-    #                     if generateloc(loc, x, y, 4) in self.curr_map and \
-    #                                     self.curr_map[generateloc(loc, x, y, 4)] == human:  # Oxxxx
-    #                         return 99999
-    #                     elif generateloc(loc, x, y, -1) in self.curr_map and \
-    #                                     self.curr_map[generateloc(loc, x, y, -1)] == human:  # xOxxx
-    #                         return 99999
-    #                     elif generateloc(loc, x, y, 4) not in self.curr_map and \
-    #                                     generateloc(loc, x, y, 5) not in self.curr_map: # Oxxx__
-    #                         r += 999
-    #             new_loc = generateloc(loc, x, y, -1)
-    #             if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # oOx
-    #                 new_loc = generateloc(loc, x, y, -2)
-    #                 if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # ooOx
-    #                     new_loc = generateloc(loc, x, y, -3)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # oooOx
-    #                         if generateloc(loc, x, y, -4) not in self.curr_map: # _oooOx
-    #                             return r + 17
-    #                     elif new_loc not in self.curr_map and \
-    #                         generateloc(loc, x, y, -4) not in self.curr_map: # __ooOx
-    #                         return r + 2
-    #             return r
-    #         else: # Oo
-    #             new_loc = generateloc(loc, x, y, 2)
-    #             if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # Ooo
-    #                 new_loc = generateloc(loc, x, y, 3)
-    #                 if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # Oooo
-    #                     if (generateloc(loc, x, y, 4) in self.curr_map and
-    #                                     self.curr_map[generateloc(loc, x, y, 4)] == computer) or \
-    #                         (generateloc(loc, x, y, -1) in self.curr_map and
-    #                                     self.curr_map[generateloc(loc, x, y, -1)] == computer):
-    #                         return 999999
-    #                     if generateloc(loc, x, y, 4) not in self.curr_map and \
-    #                                     generateloc(loc, x, y, -1) not in self.curr_map: # _Oooo_
-    #                         return 49999
-    #                     if generateloc(loc, x, y, 4) in self.curr_map and \
-    #                                     generateloc(loc, x, y, -1) not in self.curr_map: # _Oooox
-    #                         return 17
-    #                     if generateloc(loc, x, y, 4) not in self.curr_map and \
-    #                                     generateloc(loc, x, y, -1) in self.curr_map: # xOooo_
-    #                         return 17
-    #                 elif new_loc not in self.curr_map: # Ooo_
-    #                     new_loc = generateloc(loc, x, y, -1)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # oOoo_
-    #                         if generateloc(loc, x, y, -2) in self.curr_map and \
-    #                                 self.curr_map[generateloc(loc, x, y, -2)] == computer: # ooOoo_
-    #                             return 999999
-    #                         if generateloc(loc, x, y, -2) not in self.curr_map: # _oOoo_
-    #                             return 49999
-    #                         else:
-    #                             return 17
-    #                     new_loc = generateloc(loc, x, y, 4)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # Ooo_o
-    #                         if generateloc(loc, x, y, -1) not in self.curr_map:
-    #                             if generateloc(loc, x, y, -2) in self.curr_map and \
-    #                                             self.curr_map[generateloc(loc, x, y, -2)] == computer:
-    #                                 return 49999
-    #                         return 17
-    #                     if generateloc(loc, x, y, -1) not in self.curr_map: # _Ooo_
-    #                         if generateloc(loc, x, y, -2) in self.curr_map and \
-    #                                         self.curr_map[generateloc(loc, x, y, -2)] == computer: # o_Ooo_
-    #                             return 17
-    #                         return 15
-    #                 else: # Ooox
-    #                     new_loc = generateloc(loc, x, y, -1)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # oOoox
-    #                         new_loc = generateloc(loc, x, y, -2)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # ooOoox
-    #                             return 999999
-    #                         return 17
-    #                     elif new_loc not in self.curr_map: # _Ooox
-    #                         new_loc = generateloc(loc, x, y, -2)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # o_Ooox
-    #                             return 17
-    #                         elif new_loc not in self.curr_map:
-    #                             return 1
-    #             elif new_loc in self.curr_map and self.curr_map[new_loc] == computer: # Oox
-    #                 new_loc = generateloc(loc, x, y, -1)
-    #                 if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # oOox
-    #                     new_loc = generateloc(loc, x, y, -2)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # ooOox
-    #                         new_loc = generateloc(loc, x, y, -3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # oooOox
-    #                             return 999999
-    #                         elif new_loc not in self.curr_map: # _ooOox
-    #                             return 17
-    #                     elif new_loc not in self.curr_map: # _oOox
-    #                         new_loc = generateloc(loc, x, y, -3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # o_oOox
-    #                             return 17
-    #                         elif new_loc not in self.curr_map:
-    #                             return 1
-    #                 elif new_loc not in self.curr_map: # _Oox
-    #                     if generateloc(loc, x, y, -2) in self.curr_map and \
-    #                         self.curr_map[generateloc(loc, x, y, -2)] == computer: # o_Oox
-    #                         if generateloc(loc, x, y, -3) in self.curr_map and \
-    #                                 self.curr_map[generateloc(loc, x, y, -3)] == computer: # oo_Oox
-    #                             return 17
-    #                         elif generateloc(loc, x, y, -3) not in self.curr_map: # _o_Oox
-    #                             return 1
-    #             else: # Oo_
-    #                 new_loc = generateloc(loc, x, y, -1)
-    #                 if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # oOo_
-    #                     new_loc = generateloc(loc, x, y, -2)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # ooOo_
-    #                         new_loc = generateloc(loc, x, y, -3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # oooOo_
-    #                             return 999999
-    #                         elif new_loc not in self.curr_map: # _ooOo_
-    #                             return 49999
-    #                         else: # xooOo_
-    #                             return 17
-    #                     elif new_loc not in self.curr_map: # _oOo_
-    #                         new_loc = generateloc(loc, x, y, 3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # _oOo_o
-    #                             new_loc = generateloc(loc, x, y, -3)
-    #                             if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # o_oOo_o
-    #                                 return 49999
-    #                             return 17
-    #                         new_loc = generateloc(loc, x, y, -3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # o_oOo_
-    #                             return 17
-    #                         return 15
-    #                     else: # xoOo_
-    #                         new_loc = generateloc(loc, x, y, 3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # xoOo_o
-    #                             return 17
-    #                         elif new_loc not in self.curr_map: # xoOo__
-    #                             return 1
-    #                 elif new_loc not in self.curr_map: # _Oo_
-    #                     new_loc = generateloc(loc, x, y, -2)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # o_Oo_
-    #                         new_loc = generateloc(loc, x, y, -3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # oo_Oo_
-    #                             return 17
-    #                         elif new_loc not in self.curr_map: # _o_Oo_
-    #                             return 12
-    #                     new_loc = generateloc(loc, x, y, 3)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # _Oo_o
-    #                         new_loc = generateloc(loc, x, y, 4)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # _Oo_oo
-    #                             return 17
-    #                         elif new_loc not in self.curr_map: # _Oo_o_
-    #                             return 12
-    #                 else: # xOo_
-    #                     new_loc = generateloc(loc, x, y, 3)
-    #                     if new_loc in self.curr_map and self.curr_map[new_loc] == computer: # xOo_o
-    #                         new_loc = generateloc(loc, x, y, 3)
-    #                         if new_loc in self.curr_map and self.curr_map[new_loc] == computer:  # xOo_oo
-    #                             return 17
-    #         return r
-    #
-    #     m = -1
-    #     l = tuple()
-    #     for loc in self.poss_locs:
-    #         t = check_all_directions(loc)
-    #         if t >= 999999:
-    #             return loc
-    #         if m < t:
-    #             m = t
-    #             l = loc
-    #     return l
+    def check_each(self, loc, x, y, state):
+        tempS = ""
+        for i in range(-5, 6):
+            m, n = loc[0] + x * i, loc[1] + y * i
+            if m >= 0 and n >= 0 and m < self.map_size and n < self.map_size:
+                new_loc = (m, n)
+                if new_loc not in state.curr_map:
+                    tempS += "-"
+                else:
+                    tempS += str(state.curr_map[new_loc])
+            else:
+                tempS += "x"
+        # print("loc", loc, ",tempS ", tempS)
+        if "00000" in tempS:
+            return 999999
+        if "011110" in tempS or "11101" in tempS or "11011" in tempS:
+            return 99999
+        t = tempS.find("-0000-")
+        if t > 0 and t < 5:
+            return 49999
+        if tempS.find("-1110") == 1:
+            return 999
+        if tempS.find("-11-10") == 0 or tempS.find("-1-110") == 0 or tempS.find("-1101-") == 2:
+            return 990
+        t = tempS.find("-000-")
+        if t > 1 and t < 5:
+            return 10
+        t = tempS.find("-00-0-")
+        if t > 0 and t < 5:
+            return 12
+        if tempS.find("-110") == 2:
+            return 5
+        if tempS.find("-101-") == 3:
+            return 2
+        if tempS.find("-00-") == 3:
+            return 4
+        if tempS.find("-1-01-") == 2:
+            return 3
+        if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
+            return 2
+        if tempS.find("-10-") == 3:
+            return 1
+        return 0
+
+    def check_all_directions(self, loc, state):
+        e = 0
+        for x in range(-1, 2):
+            for y in range(-1, 2):
+                if x != 0 or y != 0:
+                    a = self.check_each(loc, x, y, state)
+                    if a > 40000:
+                        return a
+                    e += a
+        return e
 
     def eva_fn(self):
-        def check_all_directions(loc, state):
-            e = 0
-            for x in range(-1, 2):
-                for y in range(-1, 2):
-                    if x != 0 or y != 0:
-                        # print("before check_each, loc is", loc, ", x, y are ", x, y)
-                        a = check_each(loc, x, y, state)
-                        if a > 40000:
-                            return a
-                        e += a
-
-            # for i in range(4):
-            #     x, y = [1, 1, 0, -1][i], [1, 0, 1, 1][i]
-            #     e = max(e, check_each(loc, x, y, state))
-            return e
-
-        def check_each(loc, x, y, state):
-            tempS = ""
-            for i in range(-5, 6):
-                m, n = loc[0] + x * i, loc[1] + y * i
-                if m >= 0 and n >= 0 and m < self.map_size and n < self.map_size:
-                    new_loc = (m, n)
-                    if new_loc not in state.curr_map:
-                        tempS += "-"
-                    else:
-                        tempS += str(state.curr_map[new_loc])
-                else:
-                    tempS += "x"
-            print("loc", loc, ",tempS ", tempS)
-            if "00000" in tempS:
-                return 999999
-            if "011110" in tempS:
-                return 99999
-            t = tempS.find("-0000-")
-            if t > 0 and t < 5:
-                return 49999
-            # r = 0
-            # t = tempS.find("-1110")
-            if tempS.find("-1110") == 1:
-                return 999
-            if tempS.find("-11-10") == 0 or tempS.find("-1-110") == 0 or tempS.find("-1101-") == 2:
-                return 990
-            t = tempS.find("-000-")
-            if t > 1 and t < 5:
-                return 10
-            t = tempS.find("-00-0-")
-            if t > 0 and t < 5:
-                return 12
-            if tempS.find("-110") == 2:
-                return 5
-            if tempS.find("-101-") == 3:
-                return 2
-            if tempS.find("-00-") == 3:
-                return 4
-            if tempS.find("-1-01-") == 2:
-                return 3
-            if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
-                return 2
-            if tempS.find("-10-") == 3:
-                return 1
-            return 0
-
-
-
         m = -1
         l = []
         for loc in self.poss_locs:
             state_copy = self.copy()
             state_copy.new_step(loc, 0)
-            t = check_all_directions(loc, state_copy)
-            # print("loc is ", loc,", t is ", t)
+            t = self.check_all_directions(loc, state_copy)
             if t >= 999999:
                 return loc
             if m < t:
@@ -323,7 +129,38 @@ class State:
                 l = [loc]
             elif m == t:
                 l.append(loc)
-            # print(l, t)
+        return choice(l)
+
+    def mnimaxFn(self, depth):
+        def mmfn(s, loc, who, depth):
+            s_copy = s.copy()
+            s_copy.new_step(loc, who)
+            d = depth - 1
+            if s_copy.isWin(loc, who):
+                if who == 0:
+                    return 999999
+                else:
+                    return -999999
+            if d == 0:
+                return s_copy.check_all_directions(loc, self)
+            c = 0
+            for move in s_copy.poss_locs:
+                if who == 0: # computer
+                    c = max(c, mmfn(s_copy, move, 1, d))
+                else: #human
+                    c = min(c, mmfn(s_copy, move, 1, d))
+            return c
+
+        c = 0
+        l = []
+        for m in self.poss_locs:
+            eva = mmfn(self, m, 1, depth)
+            print("move,", m, ". eva,", eva)
+            if c < eva:
+                c = eva
+                l = [m]
+            elif c == eva:
+                l.append(m)
         return choice(l)
 
     def __str__(self):

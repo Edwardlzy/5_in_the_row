@@ -2,7 +2,7 @@ from tkinter import *
 from state import *
 
 class Window(Frame):
-	def __init__(self, master=None, turn=1, size=15):
+	def __init__(self, master=None, turn=1, size=15, depth=1):
 	# def __init__(self, master=None, size=15):
 		Frame.__init__(self, master)
 		self.master = master
@@ -17,6 +17,7 @@ class Window(Frame):
 		self.curr_state = State(15, {}, set())
 		self.step = 0
 		self.his = []
+		self.depth = depth
 
 
 	# A helper to analyze the clicking location. Return the index on 
@@ -43,7 +44,9 @@ class Window(Frame):
 			self.bitmap[(x, y)] = 1
 			self.curr_state.new_step((x_index, y_index), 1)
 			self.his.append(self.curr_state.copy())
-			loc = self.curr_state.eva_fn()
+			# loc = self.curr_state.eva_fn()
+			loc = self.curr_state.mnimaxFn(self.depth)
+			print(loc)
 			x, y = 30 + loc[0] * self.sep_len, 30 + loc[1] * self.sep_len
 			self.draw_chess(x, y)
 			self.curr_state.new_step(loc, 0)
