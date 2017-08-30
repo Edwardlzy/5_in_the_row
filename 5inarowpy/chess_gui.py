@@ -40,7 +40,8 @@ class Window(Frame):
 		x = 30 + x_index * self.sep_len
 		y = 30 + y_index * self.sep_len
 		# print("position: (", x, ", ", y, ")")
-		if self.draw_chess(x, y):
+		user = self.draw_chess(x, y)
+		if user:
 			self.bitmap[(x, y)] = 1
 			self.curr_state.new_step((x_index, y_index), 1)
 			self.his.append(self.curr_state.copy())
