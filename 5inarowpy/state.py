@@ -16,6 +16,14 @@ class State:
     def copy(self):
         return State(self.map_size, self.curr_map.copy(), self.poss_locs.copy())
 
+    def __eq__(self, other):
+        for i in self.curr_map:
+            if i not in other.curr_map:
+                return False
+            if self.curr_map[i] != other.curr_map[i]:
+                return False
+        return True
+
     def new_step(self, vertex, who):
         self.curr_map[vertex] = who
         # self.step += 1
@@ -72,7 +80,7 @@ class State:
                     tempS += str(state.curr_map[new_loc])
             else:
                 tempS += "x"
-        print("loc", loc, ",tempS ", tempS)
+        # print("loc", loc, ",tempS ", tempS)
         if "00000" in tempS:
             return 999999
         if "011110" in tempS or "11101" in tempS or "11011" in tempS:
@@ -110,7 +118,7 @@ class State:
             for y in range(-1, 2):
                 if x != 0 or y != 0:
                     a = self.check_each(loc, x, y, state)
-                    print("(x, y) is", (x, 0), "eva result,", a)
+                    # print("(x, y) is", (x, y), "eva result,", a)
                     if a > 40000:
                         return a
                     e += a
@@ -134,35 +142,67 @@ class State:
 
     def minimaxFn(self, depth):
         def mmfn(s, loc, who, depth):
-            s_copy = s.copy()
-            s_copy.new_step(loc, who)
-            d = depth - 1
-            if s_copy.isWin(loc, who):
-                if who == 0:
-                    return 999999
+            if s.isWin(loc, who):
+                return 999999 if who == 0 else -999999
+            if depth == 0:
+                u = self.check_all_directions(loc, s)
+                print("at bottom u is", u)
+                return u
+            w = 1 - who
+            c = float("-inf") if w == 0 else float("inf")
+            for move in s.poss_locs:
+                sc = s.copy()
+                sc.new_step(move, w)
+                if w == 0:
+                    t = mmfn(sc, move, w, depth - 1)
+                    c = max(c, t)
                 else:
-                    return -999999
-            if d == 0:
-                return s_copy.check_all_directions(loc, s_copy)
-            c = 0
-            for move in s_copy.poss_locs:
-                if who == 0: # computer
-                    c = max(c, mmfn(s_copy, move, 1, d))
-                else: #human
-                    c = min(c, mmfn(s_copy, move, 0, d))
+                    t = mmfn(sc, move, w, depth - 1)
+                    c = min(c, t)
+                print("current move is", move, "depth is", depth, ", who is", w, "(0 means max, 1 means min) , c is", c, ", t is", t)
+            # if who == 1:
+            #     print("c", c)
+            #     exit()
             return c
 
-        c = 0
+        y = float("-inf")
         l = []
         for m in self.poss_locs:
-            eva = mmfn(self, m, 0, depth)
+            s_copy = self.copy()
+            s_copy.new_step(m, 0)
+            eva = mmfn(s_copy, m, 0, depth - 1)
             # print("move,", m, ". eva,", eva)
-            if c < eva:
-                c = eva
+            if y < eva:
+                y = eva
                 l = [m]
-            elif c == eva:
+            elif y == eva:
                 l.append(m)
         return choice(l)
 
-    def __str__(self):
-        return self.curr_map
+class dpstorage:
+    def __init__(self):
+        self.all = dict()
+
+    def hashing(self, s):
+        h = 0
+        for i in s.curr_map:
+            h += i[0] + i[1] + s.curr_map[i]
+        return h
+
+    def find(self, s, depth):
+        h = self.hashing(s)
+        if h in self.all:
+            v = self.all[h]
+            for i in v:
+                if i[0] == s.curr_map and i[1] >= depth:
+                    return i[2]
+        return False
+
+    def add(self, s, depth, eva):
+        h = self.hashing(s)
+        if h not in self.all:
+            self.all[h] = []
+        self.all[h].append([s.curr_map, depth, eva])
+
+# if __name__ == "__main__":
+#     pass
