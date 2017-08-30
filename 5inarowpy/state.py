@@ -48,19 +48,21 @@ class State:
 
     def isWin(self, loc, who):
         def one_direction(loc, x, y, who):
-            p, q = loc[0], loc[1]
-            a, b = - 4 * x, - 4 * y
-            i, count = 0, 0
-            while i < 9:
-                check_loc = (p + a, q + b)
-                if check_loc in self.curr_map and self.curr_map[check_loc] == who:
-                    count += 1
-                    if count == 5:
-                        return True
+            tempS = ""
+            for i in range(-5, 6):
+                m, n = loc[0] + x * i, loc[1] + y * i
+                if m >= 0 and n >= 0 and m < self.map_size and n < self.map_size:
+                    new_loc = (m, n)
+                    if new_loc not in self.curr_map:
+                        tempS += "-"
+                    else:
+                        tempS += str(self.curr_map[new_loc])
                 else:
-                    count = 0
-                i, a, b = i+1, a+x, b+y
-            return False
+                    tempS += "x"
+            if "00000" in tempS:
+                return float("inf")
+            if "11111" in tempS:
+                return float("-inf")
 
         for i in range(4):
             x, y = [1, 1, 0, -1][i], [1, 0, 1, 1][i]
@@ -82,35 +84,36 @@ class State:
                 tempS += "x"
         # print("loc", loc, ",tempS ", tempS)
         if "00000" in tempS:
-            return 999999
+            return float("inf")
         if "011110" in tempS or "11101" in tempS or "11011" in tempS:
-            return 99999
+            return 999999
         t = tempS.find("-0000-")
         if t > 0 and t < 5:
-            return 49999
+            return 29999
+        r = 0
         if tempS.find("-1110") == 1:
-            return 999
+            r += 3999
         if tempS.find("-11-10") == 0 or tempS.find("-1-110") == 0 or tempS.find("-1101-") == 2:
-            return 990
+            r += 3900
         t = tempS.find("-000-")
         if t > 1 and t < 5:
-            return 10
+            r += 100
         t = tempS.find("-00-0-")
         if t > 0 and t < 5:
-            return 12
+            r += 120
         if tempS.find("-110") == 2:
-            return 5
+            r += 50
         if tempS.find("-101-") == 3:
-            return 2
+            r += 25
         if tempS.find("-00-") == 3:
-            return 4
+            r += 20
         if tempS.find("-1-01-") == 2:
-            return 3
+            r += 30
         if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
-            return 2
+            r += 15
         if tempS.find("-10-") == 3:
-            return 1
-        return 0
+            r += 8
+        return r
 
     def check_all_directions(self, loc, state):
         e = 0
@@ -143,10 +146,10 @@ class State:
     def minimaxFn(self, depth):
         def mmfn(s, loc, who, depth):
             if s.isWin(loc, who):
-                return 999999 if who == 0 else -999999
+                return float("inf") if who == 0 else float("-inf")
             if depth == 0:
                 u = self.check_all_directions(loc, s)
-                print("at bottom u is", u)
+                # print("at bottom u is", u)
                 return u
             w = 1 - who
             c = float("-inf") if w == 0 else float("inf")
@@ -159,6 +162,7 @@ class State:
                 else:
                     t = mmfn(sc, move, w, depth - 1)
                     c = min(c, t)
+                    print("================")
                 print("current move is", move, "depth is", depth, ", who is", w, "(0 means max, 1 means min) , c is", c, ", t is", t)
             # if who == 1:
             #     print("c", c)
