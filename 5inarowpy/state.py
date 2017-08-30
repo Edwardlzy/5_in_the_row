@@ -107,19 +107,19 @@ class State:
         if t > 0 and t < 5:
             r += 120
         if tempS.find("-01110") == 0:
-            r += 55
+            r += 40
         if tempS.find("-110") == 2:
-            r += 50
+            r += 40
         if tempS.find("-101-") == 3:
-            r += 25
-        if tempS.find("-00-") == 3:
-            r += 25
-        if tempS.find("-1-01-") == 2:
-            r += 30
-        if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
             r += 20
+        if tempS.find("-00-") == 3:
+            r += 20
+        if tempS.find("-1-01-") == 2:
+            r += 25
+        if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
+            r += 12
         if tempS.find("-10-") == 3:
-            r += 8
+            r += 4
         return r
 
     def check_all_directions(self, loc, state):
