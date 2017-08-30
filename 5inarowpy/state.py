@@ -156,9 +156,10 @@ class State:
             if s.isWin(loc, who):
                 return float("inf") if who == 0 else float("-inf")
             if depth == 0:
-                u = self.check_all_directions(loc, s)
-                print("at bottom u is", u, ", loc is", loc)
-                return u
+                # u = self.check_all_directions(loc, s)
+                # print("at bottom u is", u, ", loc is", loc)
+                # return u
+                return 0
             w = 1 - who
             c = float("-inf") if w == 0 else float("inf")
             for move in s.poss_locs:
@@ -189,6 +190,8 @@ class State:
                 l = [m]
             elif y == eva:
                 l.append(m)
+        if y == 0:
+            return self.eva_fn()
         return choice(l)
 
 class dpstorage:

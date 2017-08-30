@@ -2,7 +2,7 @@ from tkinter import *
 from state import *
 
 class Window(Frame):
-	def __init__(self, master=None, turn=1, size=15, depth=1):
+	def __init__(self, master=None, turn=1, size=15, depth=3):
 	# def __init__(self, master=None, size=15):
 		Frame.__init__(self, master)
 		self.master = master
