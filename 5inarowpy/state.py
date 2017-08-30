@@ -85,7 +85,7 @@ class State:
         # print("loc", loc, ",tempS ", tempS)
         if "00000" in tempS:
             return float("inf")
-        if "011110" in tempS or "11101" in tempS or "11011" in tempS:
+        if "011110" in tempS or tempS.find("11101") == 2 or tempS.find("11101") == 3:
             return 999999
         t = tempS.find("-0000-")
         if t > 0 and t < 5:
@@ -95,22 +95,29 @@ class State:
             r += 3999
         if tempS.find("-11-10") == 0 or tempS.find("-1-110") == 0 or tempS.find("-1101-") == 2:
             r += 3900
+        t = tempS.find("0-0001")
+        if "-00001" in tempS:
+            r += 250
+        if "0-0001" in tempS or "00-001" in tempS or "000-01" in tempS:
+            r += 220
         t = tempS.find("-000-")
         if t > 1 and t < 5:
             r += 100
         t = tempS.find("-00-0-")
         if t > 0 and t < 5:
             r += 120
+        if tempS.find("-01110") == 0:
+            r += 55
         if tempS.find("-110") == 2:
             r += 50
         if tempS.find("-101-") == 3:
             r += 25
         if tempS.find("-00-") == 3:
-            r += 20
+            r += 25
         if tempS.find("-1-01-") == 2:
             r += 30
         if tempS.find("-0-0-") == 2 or tempS.find("-0--0-") == 1:
-            r += 15
+            r += 20
         if tempS.find("-10-") == 3:
             r += 8
         return r
@@ -134,6 +141,7 @@ class State:
             state_copy = self.copy()
             state_copy.new_step(loc, 0)
             t = self.check_all_directions(loc, state_copy)
+            # print("loc is", loc, "eva result,", t)
             if t >= 999999:
                 return loc
             if m < t:
@@ -149,7 +157,7 @@ class State:
                 return float("inf") if who == 0 else float("-inf")
             if depth == 0:
                 u = self.check_all_directions(loc, s)
-                # print("at bottom u is", u)
+                print("at bottom u is", u, ", loc is", loc)
                 return u
             w = 1 - who
             c = float("-inf") if w == 0 else float("inf")
