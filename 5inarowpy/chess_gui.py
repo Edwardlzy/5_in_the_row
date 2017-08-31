@@ -2,12 +2,11 @@ from tkinter import *
 from state import *
 
 class Window(Frame):
-	def __init__(self, master=None, turn=1, size=15, depth=3):
+	def __init__(self, master=None, turn=1, size=15, depth=1):
 	# def __init__(self, master=None, size=15):
 		Frame.__init__(self, master)
 		self.master = master
-		self.canvas = Canvas(self.master, width=720, height=720, bg="#FFA23D")
-		self.canvas.pack()
+		self.canvas = Canvas(self.master, width=720, height=720, bg="#FFA23D", scrollregion=(0, 0, 720, 720))
 		self.turn = turn
 		self.steps = []
 		self.size = size
@@ -26,8 +25,9 @@ class Window(Frame):
 		# Actual position.
 		x = event.x
 		y = event.y
+		print("x =", x, "y =", y)
 
-		if (x < 0 or y < 0 or x >=710 or y >= 710):
+		if (x < 10 or y < 10 or x >=710 or y >= 710):
 			# print("Invalid position!")
 			return
 
@@ -57,6 +57,15 @@ class Window(Frame):
 			return x_index, y_index
 
 
+	def processWheel(self, event):
+		if event.delta > 0:
+			# scroll upward
+			self.canvas.yview_scroll(-1*(event.delta//120), "units")
+
+		else:
+			self.canvas.yview_scroll(event.delta//120, "units")
+		# self.canvas.yview_scroll(-1*(event.delta//120), "units")
+
 	# Build the window and necessary settings.
 	def custom_init(self):
 		self.master.title("5 in a row")
@@ -73,6 +82,19 @@ class Window(Frame):
 		menu_bar.add_cascade(label="play", menu=play)
 		self.draw_board()
 		self.canvas.bind("<Button 1>", self.get_clicking_loc)
+
+		# ScrollBar
+		sb = Scrollbar(self.master, orient=VERTICAL)
+		sb.bind("<MouseWheel>")
+		sb.pack(side=RIGHT, fill="y")
+		sb.config(command=self.canvas.yview)
+		self.canvas.bind("<MouseWheel>")
+		self.canvas.config(yscrollcommand=sb.set)
+		self.canvas.pack(side=LEFT, expand=True, fill=BOTH)
+		# self.canvas['yscrollcommand'] = sb.set
+		# for i in range(100):
+		# 	self.canvas.insert()
+		# self.canvas.bind_all("<MouseWheel>", self.processWheel)
 
 
 	# Draw the play board.
@@ -157,6 +179,4 @@ class Window(Frame):
 root = Tk()
 root.geometry("720x720")
 app = Window(root)
-print(app.steps)
-print(app.his)
 root.mainloop()
